@@ -16,7 +16,7 @@ app.use('/api', productRoutes);
 // Configurar CORS para permitir todas las solicitudes
 app.use(cors());  // Permite todos los orígenes
 
-// Middleware para procesar JSON en las solicitudes
+// Middleware para procesar JSON en las solicitudes hola
 app.use(express.json());
 
 app.get('/', (req, res) => {
