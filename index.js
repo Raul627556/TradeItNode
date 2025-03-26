@@ -1,8 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const productRoutes = require('./routes/productRoutes');
 
+//ControllerRoutes
+const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 
 require('dotenv').config();
@@ -11,12 +13,13 @@ const app = express();
 const port = 80;
 
 //ROUTES
-app.use('/api', productRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/user', userRoutes);
 
 // Configurar CORS para permitir todas las solicitudes
 app.use(cors());  // Permite todos los orígenes
 
-// Middleware para procesar JSON en las solicitudes hola
+// Middleware para procesar JSON en las solicitudes
 app.use(express.json());
 
 app.get('/', (req, res) => {
