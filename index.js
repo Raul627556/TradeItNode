@@ -15,6 +15,7 @@ const port = 80;
 // Middleware para procesar JSON en las solicitudes
 app.use(express.json());
 
+
 //ROUTES
 app.use('/api/products', productRoutes);
 app.use('/api/user', userRoutes);
