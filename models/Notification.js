@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const NotificationSchema = new mongoose.Schema({
   product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
@@ -8,4 +8,4 @@ const NotificationSchema = new mongoose.Schema({
   status: { type: String, enum: ['read', 'unread'], default: 'unread' }
 }, { timestamps: true });
 
-export default mongoose.model('Notification', NotificationSchema);
+module.exports = mongoose.model('Notification', NotificationSchema);

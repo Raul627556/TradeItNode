@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const UserChatSchema = new mongoose.Schema({
   user_1: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
@@ -11,4 +11,4 @@ const UserChatSchema = new mongoose.Schema({
   }]
 }, { timestamps: true });
 
-export default mongoose.model('UserChat', UserChatSchema);
+module.exports = mongoose.model('UserChat', UserChatSchema);

@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const NotificationTypeSchema = new mongoose.Schema({
   name: String,
   description: String
 });
 
-export default mongoose.model('NotificationType', NotificationTypeSchema);
+module.exports = mongoose.model('NotificationType', NotificationTypeSchema);
