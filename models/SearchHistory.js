@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const SearchHistorySchema = new mongoose.Schema({
   searched_text: String,
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true });
 
-export default mongoose.model('SearchHistory', SearchHistorySchema);
+module.exports = mongoose.model('SearchHistory', SearchHistorySchema);

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const ProductSchema = new mongoose.Schema({
   name: String,
@@ -11,4 +11,5 @@ const ProductSchema = new mongoose.Schema({
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }]
 }, { timestamps: true });
 
-export default mongoose.model('Product', ProductSchema);
+module.exports = mongoose.model('Product', ProductSchema);
+

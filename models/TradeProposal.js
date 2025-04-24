@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const TradeProposalSchema = new mongoose.Schema({
   offered_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -11,4 +11,4 @@ const TradeProposalSchema = new mongoose.Schema({
   message: String
 }, { timestamps: true });
 
-export default mongoose.model('TradeProposal', TradeProposalSchema);
+module.exports = mongoose.model('TradeProposal', TradeProposalSchema);

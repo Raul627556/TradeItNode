@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const TransactionSchema = new mongoose.Schema({
   product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
@@ -6,4 +6,4 @@ const TransactionSchema = new mongoose.Schema({
   user_client: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true });
 
-export default mongoose.model('Transaction', TransactionSchema);
+module.exports = mongoose.model('Transaction', TransactionSchema);
