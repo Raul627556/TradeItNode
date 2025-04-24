@@ -1,0 +1,21 @@
+name: Auto Pull Request to master
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código del repo
+        uses: actions/checkout@v3
+
+      - name: Crear Pull Request automático a master
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: 'master'
+          pr_title: '🚀 Auto PR desde ${{ github.ref_name }}'
+          pr_body: 'Este PR fue creado automáticamente desde la rama ${{ github.ref_name }}'
+          github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -12,6 +12,10 @@ require('dotenv').config();
 const app = express();
 const port = 80;
 
+// Middleware para procesar JSON en las solicitudes
+app.use(express.json());
+
+
 //ROUTES
 app.use('/api/products', productRoutes);
 app.use('/api/user', userRoutes);
@@ -19,8 +23,7 @@ app.use('/api/user', userRoutes);
 // Configurar CORS para permitir todas las solicitudes
 app.use(cors());  // Permite todos los orígenes
 
-// Middleware para procesar JSON en las solicitudes
-app.use(express.json());
+
 
 app.get('/', (req, res) => {
   res.send('Bienvenido a la API');
