@@ -1,6 +1,5 @@
 const User = require('../models/User');
-
-// CRUD
+const bcrypt = require('bcrypt');
 
 const getAll = async (req, res) => {
   try {
@@ -23,9 +22,29 @@ const getById = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const item = new User(req.body);
-    const saved = await item.save();
+    const {
+      name, email, country, age, photo_src, location, zipcode,
+      username, password
+    } = req.body;
+
+    const existingUser = await User.findOne({ 'account.username': username });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      personalInfo: { name, email, country, age, photo_src, location, zipcode },
+      account: {
+        username,
+        passwordHash: hashedPassword
+      }
+    });
+
+    const saved = await user.save();
     res.status(201).json(saved);
+
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
