@@ -1,5 +1,7 @@
 const User = require('../models/User');
 
+// CRUD
+
 const getAll = async (req, res) => {
   try {
     const items = await User.find();
@@ -56,4 +58,3 @@ module.exports = {
   update,
   remove
 };
-

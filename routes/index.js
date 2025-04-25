@@ -12,6 +12,7 @@ router.use('/ratings', require('./UserRatingRoutes'));
 router.use('/search-history', require('./SearchHistoryRoutes'));
 router.use('/chats', require('./UserChatRoutes'));
 router.use('/trades', require('./TradeProposalRoutes'));
+router.use('/authentication', require('./AuthenticationRoutes'));
 
 module.exports = router;
 
