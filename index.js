@@ -5,10 +5,18 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 9001;
+const port = process.env.PORT || 80;
 
 app.use(express.json());
-app.use(cors());
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(cors({
+    origin: 'http://localhost:8081',
+    credentials: true
+  }));
+} else {
+  // cors con lista blanca para prod…
+}
 
 // 👇 Aquí cargamos las rutas centralizadas
 app.use('/api', require('./routes'));
