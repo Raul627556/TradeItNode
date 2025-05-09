@@ -2,18 +2,23 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require("../models/User");
 
-// Verifica si el usuario está bloqueado
 const isLocked = (user) => {
     return user.account.lockUntil && user.account.lockUntil > Date.now();
 };
 
-// Registro de usuario
 const registerUser = async (req, res) => {
     try {
         const { name, email, username, password } = req.body;
 
-        const existingUser = await User.findOne({ 'account.username': username });
-        if (existingUser) return res.status(400).json({ error: "Username already exists" });
+        const existingUsername = await User.findOne({ 'account.username': username });
+        if (existingUsername) {
+            return res.status(400).json({ error: "Username already exists" });
+        }
+
+        const existingEmail = await User.findOne({ 'personalInfo.email': email });
+        if (existingEmail) {
+            return res.status(400).json({ error: "Email already registered" });
+        }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -29,18 +34,23 @@ const registerUser = async (req, res) => {
         res.status(500).json({
             error: "Error registering a user",
             details: error.message,
-            body: req.body + " xd"
+            body: req.body
         });
     }
 };
 
-// Login de usuario
 const loginUser = async (req, res) => {
     try {
-        const { username, password } = req.body;
-        const user = await User.findOne({ 'account.username': username });
+        const { identifier, password } = req.body;
 
-        if (!user) return res.status(400).json({ error: "Invalid username or password" });
+        const user = await User.findOne({
+            $or: [
+                { 'account.username': identifier },
+                { 'personalInfo.email': identifier }
+            ]
+        });
+
+        if (!user) return res.status(400).json({ error: "Invalid username/email or password" });
 
         if (isLocked(user)) {
             return res.status(403).json({ error: "Account locked. Try again later." });
@@ -55,10 +65,9 @@ const loginUser = async (req, res) => {
             }
 
             await user.save();
-            return res.status(400).json({ error: "Invalid username or password" });
+            return res.status(400).json({ error: "Invalid username/email or password" });
         }
 
-        // Reset de intentos fallidos y actualizar 'last_login'
         user.account.loginAttempts = 0;
         user.account.lockUntil = null;
         user.account.last_login = Date.now();
