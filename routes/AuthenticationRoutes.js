@@ -7,4 +7,8 @@ const router = express.Router();
 router.post('/register', UserController.registerUser);
 router.post('/login', UserController.loginUser);
 
+// Rutas para manejo de tokens y logout
+router.post('/refresh-token', UserController.refreshToken);
+router.post('/logout',        UserController.logoutUser);
+
 module.exports = router;
