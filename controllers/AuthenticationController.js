@@ -162,9 +162,24 @@ const logoutUser = async (req, res) => {
     }
 };
 
+const getCurrentUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select('-account.passwordHash -account.tokens');
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({ user });
+    } catch (error) {
+        console.error('Error in /me:', error);
+        res.status(500).json({ error: 'Error retrieving user info' });
+    }
+};
+
 module.exports = {
     registerUser,
     loginUser,
     refreshToken,
-    logoutUser
+    logoutUser,
+    getCurrentUser
 };
