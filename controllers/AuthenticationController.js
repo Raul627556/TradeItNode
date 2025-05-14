@@ -80,12 +80,14 @@ const loginUser = async (req, res) => {
         user.account.tokens.push({ token: newRefresh });
         await user.save();
 
+        const isProduction = process.env.NODE_ENV === 'production';
         res
             .cookie('refreshToken', newRefresh, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'Strict',
-                maxAge: 1000 * 60 * 60 * 24 * 7
+                secure: isProduction,
+                sameSite: isProduction ? 'None' : 'Lax',
+                maxAge: 1000 * 60 * 60 * 24 * 7,
+                path: '/refresh',
             })
             .json({ message: 'Login successful', accessToken });
 
