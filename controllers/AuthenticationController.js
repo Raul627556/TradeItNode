@@ -11,29 +11,53 @@ const isLocked = (user) => {
 
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
-        // Validaciones de existencia
-        if (await User.findOne({ 'personalInfo.email': email })) {
-            return res.status(400).json({ error: 'Email already registered' });
+      const { name, email, password } = req.body;
+  
+      // Validación básica
+      if (!name || !email || !password) {
+        return res.status(400).json({ error: 'Faltan campos obligatorios' });
+      }
+  
+      // Verificar si el email ya está registrado
+      const existingUser = await User.findOne({ 'personalInfo.email': email });
+      if (existingUser) {
+        return res.status(400).json({ error: 'El email ya está registrado' });
+      }
+  
+      // Hashear la contraseña
+      const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 10;
+      const passwordHash = await bcrypt.hash(password, saltRounds);
+  
+      // Crear nuevo usuario
+      const newUser = new User({
+        personalInfo: { name, email },
+        account: { passwordHash }
+      });
+  
+      // Guardar usuario en base de datos
+      await newUser.save();
+  
+      return res.status(201).json({
+        message: 'Usuario registrado correctamente',
+        user: {
+          id: newUser._id,
+          name: newUser.personalInfo.name,
+          email: newUser.personalInfo.email
         }
-
-        // Hash de contraseña con salt rounds configurable
-        const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 10;
-        const passwordHash = await bcrypt.hash(password, saltRounds);
-
-        const newUser = new User({
-            personalInfo: { name, email },
-            account: { passwordHash }
-        });
-
-        await newUser.save();
-        res.status(201).json({ message: 'User registered successfully' });
-
+      });
+  
     } catch (error) {
-        console.error('Register error:', error);
-        res.status(500).json({ error: 'Error registering a user' + password });
+      console.error('Register error:', error);
+  
+      // Detectar error de duplicado por índice único (email)
+      if (error.code === 11000) {
+        return res.status(400).json({ error: 'Este email ya está en uso'+ error.message });
+      }
+  
+      return res.status(500).json({ error: 'Error al registrar el usuario' });
     }
-};
+  };
+  
 
 const loginUser = async (req, res) => {
     try {
