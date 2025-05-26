@@ -11,12 +11,8 @@ const isLocked = (user) => {
 
 const registerUser = async (req, res) => {
     try {
-        const { name, email, username, password } = req.body;
-
+        const { name, email, password } = req.body;
         // Validaciones de existencia
-        if (await User.findOne({ 'account.username': username })) {
-            return res.status(400).json({ error: 'Username already exists' });
-        }
         if (await User.findOne({ 'personalInfo.email': email })) {
             return res.status(400).json({ error: 'Email already registered' });
         }
@@ -27,7 +23,7 @@ const registerUser = async (req, res) => {
 
         const newUser = new User({
             personalInfo: { name, email },
-            account: { username, passwordHash }
+            account: { passwordHash }
         });
 
         await newUser.save();
@@ -35,7 +31,7 @@ const registerUser = async (req, res) => {
 
     } catch (error) {
         console.error('Register error:', error);
-        res.status(500).json({ error: 'Error registering a user' });
+        res.status(500).json({ error: 'Error registering a user' + password });
     }
 };
 
