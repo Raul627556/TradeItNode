@@ -12,7 +12,7 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
   app.use(cors({
     origin: 'http://tradeit.es:8081',
-    credentials: true
+    credentials: true,
   }));
 } else {
   // cors con lista blanca para prod…
